@@ -1,0 +1,73 @@
+---
+title: "Beauty, or not, in the classroom"
+author: "Varun Venkatesh"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Required Libraries
+```{r}
+library(ggplot2)
+library(dplyr)
+library(knitr)
+```
+
+## Load Data
+```{r}
+profs <- read.csv("profs.csv")
+kable(head(profs))
+```
+
+## Part A: Histogram of Course Evaluation Scores
+```{r}
+ggplot(profs, aes(x = eval)) +
+  geom_histogram(binwidth = 0.2, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Distribution of Course Evaluation Scores", 
+       x = "Evaluation Score", y = "Frequency") +
+  theme_minimal()
+```
+
+*Caption:* This histogram displays the distribution of course evaluation scores ranging from 1 to 5, with the majority clustering in the mid-to-high range. This pattern suggests that most instructors receive good evaluations from students.
+
+## Part B: Boxplots of Evaluation Scores by Native English Speaker Status
+```{r}
+ggplot(profs, aes(x = as.factor(native), y = eval, fill = as.factor(native))) +
+  geom_boxplot() +
+  labs(title = "Course Evaluation Scores by Native English Speaker Status", 
+       x = "Native English Speaker", y = "Evaluation Score") +
+  scale_x_discrete(labels = c("Non-Native", "Native")) +
+  theme_minimal() +
+  scale_fill_manual(values = c("red", "green"))
+```
+
+*Caption:* The boxplot compares evaluation scores between native and non-native English-speaking professors. Native speakers tend to receive slightly higher median scores, and their ratings show less variability, showing biases in student perceptions.
+
+## Part C: Faceted Histogram of Evaluation Scores by Gender
+```{r}
+ggplot(profs, aes(x = eval)) +
+  geom_histogram(binwidth = 0.2, fill = "purple", color = "black", alpha = 0.7) +
+  facet_wrap(~ gender, nrow = 2) +
+  labs(title = "Distribution of Course Evaluation Scores by Gender", 
+       x = "Evaluation Score", y = "Frequency") +
+  theme_minimal()
+```
+
+*Caption:* The faceted histogram shows the distribution of evaluation scores for male and female instructors. Both genders have similar rating patterns, but there are small differences in density.
+
+
+## Part D: Scatterplot of Attractiveness vs. Evaluation Scores
+```{r}
+ggplot(profs, aes(x = beauty, y = eval)) +
+  geom_point(alpha = 0.5, color = "blue") +
+  geom_smooth(method = "lm", color = "red", se = FALSE) +
+  labs(title = "Relationship Between Physical Attractiveness and Course Evaluation Scores", 
+       x = "Attractiveness Score", y = "Evaluation Score") +
+  theme_minimal()
+```
+
+*Caption:* This scatterplot shows the relationship between instructors' physical attractiveness (x-axis) and their evaluation scores (y-axis). A positive trend line indicates a potential association, suggesting that perceived attractiveness might influence evaluation scores.
+

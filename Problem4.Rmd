@@ -1,0 +1,77 @@
+---
+title: "Billboard Top 100 Analysis"
+author: "Varun Venkatesh"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Required Libraries
+```{r}
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(forcats)
+```
+
+## Load Data
+```{r}
+billboard <- read.csv("billboard.csv")
+kable(head(billboard))
+```
+
+## Part A: Top 10 Most Popular Songs by Weeks on the Chart
+```{r}
+top_songs <- billboard %>%
+  group_by(performer, song) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  arrange(desc(count)) %>%
+  head(10)
+
+kable(top_songs, col.names = c("Performer", "Song", "Weeks on Chart"))
+```
+
+*Caption:* This table lists the top 10 songs ranked by the number of weeks on the Billboard Top 100 chart. Each entry is identified by performer and song title, just in case of songs with duplicate names. This ranking provides information of hits in music history.
+
+## Part B: Musical Diversity Over Time
+```{r}
+musical_diversity <- billboard %>%
+  filter(year > 1958 & year < 2021) %>%
+  group_by(year) %>%
+  summarise(unique_songs = n_distinct(song), .groups = "drop")
+
+ggplot(musical_diversity, aes(x = year, y = unique_songs)) +
+  geom_line(color = "blue", size = 1) +
+  labs(title = "Musical Diversity Over Time",
+       x = "Year", y = "Unique Songs on Billboard Top 100") +
+  theme_minimal()
+```
+
+*Caption:* This line graph plots the number of unique songs appearing on the Billboard Top 100 each year, excluding incomplete data from 1958 and 2021. A steady upward trend shows increasing musical diversity, showing the growing variety of music.
+
+
+## Part C: Artists with 30+ Ten-Week Hits
+```{r}
+ten_week_hits <- billboard %>%
+  group_by(performer, song) %>%
+  summarise(weeks_on_chart = n(), .groups = "drop") %>%
+  filter(weeks_on_chart >= 10) %>%
+  group_by(performer) %>%
+  summarise(ten_week_hits = n(), .groups = "drop") %>%
+  filter(ten_week_hits >= 30) %>%
+  arrange(desc(ten_week_hits))
+
+ggplot(ten_week_hits, aes(x = fct_reorder(performer, ten_week_hits), y = ten_week_hits)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Artists with 30+ Ten-Week Hits",
+       x = "Performer", y = "Number of Ten-Week Hits") +
+  theme_minimal()
+```
+
+*Caption:* Caption: This bar plot showcases the 19 artists with at least 30 songs that remained on the Billboard Top 100 for ten or more weeks. Used horizontal bars for better readability, and highlighted dominant artists with consistent long-term chart success.
+---
+
