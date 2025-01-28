@@ -2,11 +2,13 @@
 title: "Billboard Top 100 Analysis"
 author: "Varun Venkatesh"
 date: "`r Sys.Date()`"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Load Required Libraries
@@ -72,6 +74,6 @@ ggplot(ten_week_hits, aes(x = fct_reorder(performer, ten_week_hits), y = ten_wee
   theme_minimal()
 ```
 
-*Caption:* Caption: This bar plot showcases the 19 artists with at least 30 songs that remained on the Billboard Top 100 for ten or more weeks. Used horizontal bars for better readability, and highlighted dominant artists with consistent long-term chart success.
+*Caption:*  This bar plot showcases the 19 artists with at least 30 songs that remained on the Billboard Top 100 for ten or more weeks. Used horizontal bars for better readability, and highlighted dominant artists with consistent long-term chart success.
 ---
 

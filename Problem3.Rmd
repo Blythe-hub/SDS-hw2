@@ -2,11 +2,13 @@
 title: "Capital Metro UT Ridership Analysis"
 author: "Varun Venkatesh"
 date: "`r Sys.Date()`"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Load Required Libraries
